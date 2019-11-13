@@ -69,7 +69,10 @@ def test_get_screenshot_as_png(webdriver, dimensions: Tuple[int, int]) -> None:
 
     # a WxHpx image of white pixels
     assert png.size == (width, height)
-    assert png.tobytes() == b"\xff\xff\xff\xff"*width*height
+
+    data = png.tobytes("raw", "RGBA")
+    assert len(data) == 4*width*height
+    assert data == b"\xff\xff\xff\xff"*width*height
 
 @pytest.mark.unit
 @pytest.mark.selenium
@@ -91,7 +94,7 @@ def test_get_screenshot_as_png_with_glyph(webdriver, dimensions: Tuple[int, int]
     png = bie.get_screenshot_as_png(layout, web_dirver=webdriver)
     assert png.size == (width, height)
 
-    data = png.tobytes()
+    data = png.tobytes("raw", "RGBA")
     assert len(data) == 4*width*height
 
     # count red pixels in center area
